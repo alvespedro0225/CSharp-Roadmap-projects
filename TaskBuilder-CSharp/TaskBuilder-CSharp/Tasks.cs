@@ -7,7 +7,7 @@ public class Tasks
     private const string IdFile = "./id.txt";
     private static int _currentId = GetCurrentId();
     private string? _description;
-    public int Id { get; }
+    public int Id { get; set; }
     public string? CreatedAt { get; init; }
     public string? UpdatedAt { get; set; }
     public string? Status { get; set; }
