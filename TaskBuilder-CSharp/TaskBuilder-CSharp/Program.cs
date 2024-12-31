@@ -29,7 +29,7 @@ public static class Program
                 var input = Console.ReadLine();
                 if (string.IsNullOrEmpty(input))
                 {
-                    Console.WriteLine($"Please invalid input \n{input}\n");
+                    Console.WriteLine($"Invalid input \n{input}\n");
                     continue;
                 }
                 argv = InputValidator.MakeList(input);
