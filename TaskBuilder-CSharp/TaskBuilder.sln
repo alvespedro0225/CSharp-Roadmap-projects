@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskBuilder-CSharp", "TaskBuilder-CSharp\TaskBuilder-CSharp.csproj", "{8C82BB52-8166-465B-A1CF-44C97942547A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskBuilder", "TaskBuilder\TaskBuilder.csproj", "{8C82BB52-8166-465B-A1CF-44C97942547A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
