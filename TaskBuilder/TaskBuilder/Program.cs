@@ -77,7 +77,7 @@ public static class Program
             }
             catch (ArgumentOutOfRangeException)
             {
-                Console.WriteLine($"Missing arguments, please try again. Passed \"{argv[0]}\".\n");
+                Console.WriteLine($"Missing arguments. Passed \"{argv[0]}\".\n");
             }
             catch (InvalidDataException e)
             {
