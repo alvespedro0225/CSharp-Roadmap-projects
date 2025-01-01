@@ -5,12 +5,11 @@ namespace TaskBuilder_CSharp;
 public static class TaskManager
 {  
     public static List<Tasks> AllTasks { get; private set; } = [];
-    public static int AddTask(string description, string mark="todo")
+    public static void AddTask(string description, string status = "todo")
     {
-        Tasks task = new(description, mark);
+        Tasks task = new(description, status);
         AllTasks.Add(task);
         Console.WriteLine($"Added new task with description \"{task.Description}\" and ID {task.Id}.\n");
-        return task.Id;
     }
     public static void AddTask(Tasks task)
     {
@@ -47,21 +46,21 @@ public static class TaskManager
         }
     }  
 
-    public static void MarkTask(int id, string mark)
+    public static void UpdateStatus(int id, string status)
     {
         try
         {
-            mark = mark.ToLower();
+            status = status.ToLower();
             var task = AllTasks.Where((task) => task.Id == id).ToList()[0];
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
-            if (task.Status.Equals(mark))
+            if (task.Status.Equals(status))
             {
-                Console.WriteLine($"Current status of task {id} already is \"{mark}\".\n");
+                Console.WriteLine($"Current status of task {id} already is \"{status}\".\n");
                 return;
             }
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
-            var previousMark = task.Status;
-            task.Status = mark switch
+            var previousStatus = task.Status;
+            task.Status = status switch
             {
                 "todo" => "todo",
                 "ongoing" => "ongoing",
@@ -69,7 +68,7 @@ public static class TaskManager
                 _ => throw new InvalidDataException()
             };
             task.UpdatedAt = DateTime.Now.ToString(CultureInfo.GetCultureInfo("pt-br"));
-            Console.WriteLine($"Updated mark {id} from \"{previousMark}\" to \"{task.Status}\".\n");           
+            Console.WriteLine($"Updated status {id} from \"{previousStatus}\" to \"{task.Status}\".\n");           
         }
         catch (ArgumentOutOfRangeException)
         {
@@ -77,13 +76,13 @@ public static class TaskManager
         }
         catch (InvalidDataException)
         {
-            Console.WriteLine($"Invalid mark \"{mark}\"\n.");
+            Console.WriteLine($"Invalid status \"{status}\"\n.");
         }
     }
     public static void Filter(Func<Tasks, bool> predicate)
     {
-        var markFiltered = AllTasks.Where(predicate).ToList();
-        foreach (var task in markFiltered)
+        var statusFiltered = AllTasks.Where(predicate).ToList();
+        foreach (var task in statusFiltered)
         {
             Console.WriteLine(task);
         }

@@ -2,56 +2,57 @@ namespace TaskBuilder_CSharp;
 
 public static class InputValidator
 {
-    public static List<string>? MakeList(string input)
+        /// <summary>
+        /// Turns a string into a list of strings. Use opening and closing <c>"</c> or <c>'</c>
+        /// to keep a word separated by spaces as a single string.
+        /// </summary>
+        ///  
+        /// <param name="input"> The string you want to make into an array </param>
+        ///
+        /// <returns>A list of strings consisting of the words in the initial string.</returns> 
+    public static List<string> MakeList(string input)
     {
-        List<string> inputWords = [];
-        var word = string.Empty;
-        try
+    List<string> inputWords = [];
+    input = input.Trim();
+    var word = string.Empty;
+        for (var i = 0; i < input.Length; i++)
         {
-            for (var i = 0; i < input.Length; i++)
+            if (inputWords.Count == 3) break;
+            if (input[i] == '\'' || input[i] == '\"')
             {
-                if (inputWords.Count == 3) break;
-                if (input[i] == '\'' || input[i] == '\"')
+                word += input[i++];
+                while (true)
                 {
-                    word += input[i++];
-                    while (true)
+                    if (input[i] == '\'' || input[i] == '\"')
                     {
-                        if (input[i] == '\'' || input[i] == '\"')
-                        {
-                            break;
-                        }
-
-                        word += input[i++];
-                        if (i != input.Length) continue;
-                        inputWords.Add(word);
-                        throw new FormatException();
+                        break;
                     }
 
-                    if (i == input.Length - 1)
-                        inputWords.Add(word[1..]);
-                    continue;
+                    word += input[i++];
+                    if (i != input.Length) continue;
+                    inputWords.Add(word);
+                    throw new FormatException($"Unclosed {word[0]} in {word}.\n");
                 }
 
-                if (input[i] != ' ')
-                {
-                    word += input[i];
-                }
-                else if (input[i] == ' ' && !string.IsNullOrEmpty(word))
-                {
-                    inputWords.Add(word);
-                    word = string.Empty;
-                }
-
-                if (i == (input.Length - 1) && input[i] != ' ')
-                {
-                    inputWords.Add(word);
-                }
+                if (i == input.Length - 1)
+                    inputWords.Add(word[1..]);
+                continue;
             }
-        }
-        catch (FormatException)
-        {
-            Console.WriteLine($"Invalid input \"{word}\" doesn't have closing {word[0]}\n");
-            return null;
+
+            if (input[i] != ' ')
+            {
+                word += input[i];
+            }
+            else if (input[i] == ' ' && !string.IsNullOrEmpty(word))
+            {
+                inputWords.Add(word);
+                word = string.Empty;
+            }
+
+            if (i == (input.Length - 1) && input[i] != ' ')
+            {
+                inputWords.Add(word);
+            }
         }
         return inputWords;
     }

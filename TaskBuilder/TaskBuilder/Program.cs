@@ -4,21 +4,20 @@ public static class Program
 {
     public static void Main()
     {
-        Tasks.GetCurrentId();
         FileManager.GetFileData();
         Console.WriteLine("""
         Choose an action. Possible:
-        add <description>,
+        add <description> <status*>,
         update <id> <description>,
         delete <id>,
-        mark <id> <mark>,
-        list <mark*>,
+        status <id> <status>,
+        list <status*>,
         clear,
         reset,
         quit
 
         * = optional
-        marks = "todo", "ongoing", "completed"
+        status = "todo", "ongoing", "completed"
         """);
         Console.WriteLine();
         while (true)
@@ -32,105 +31,61 @@ public static class Program
                     Console.WriteLine($"Invalid input \n{input}\n");
                     continue;
                 }
-                argv = InputValidator.MakeList(input);
-                if (argv != null) break;
+
+                try
+                {
+                    argv = InputValidator.MakeList(input);
+                    break;
+                }
+                catch (FormatException e)
+                {
+                        Console.WriteLine(e.Message);
+                }
             }
             var argc = argv.Count;
+            var action = argv[0];
+            Dictionary<string, Action<List<string>, int>> actions = new()
+            {
+                {
+                    "add", AppLogic.Add
+                },
+                {
+                    "update", AppLogic.Update
+                },
+                {
+                    "delete", AppLogic.Delete
+                },
+                {
+                    "status", AppLogic.Status
+                },
+                {
+                    "list", AppLogic.List
+                },
+                {
+                    "clear", AppLogic.Clear
+                },
+                {
+                    "reset", AppLogic.Reset
+                },
+                {
+                    "quit", AppLogic.Quit
+                }
+            };
             try
             {
-                switch (argv[0])
-                {
-                    case "add":
-                    {
-                        var description = argv[1];
-                        TaskManager.AddTask(description);
-                        break;
-                    }
-                    case "update":
-                        var newDescription = argv[2];
-                    {
-                        if (!int.TryParse(argv[1], out var taskId))
-                            throw new InvalidDataException($"\"{argv[1]}\" is not a valid number. Please try again.\n");
-                        TaskManager.UpdateTask(taskId, newDescription);
-                        break;
-                    }
-                    case "delete":
-                    {
-                        if (!int.TryParse(argv[1], out var taskId))
-                            throw new InvalidDataException($"\"{argv[1]}\" is not a valid number. Please try again.\n");
-                        TaskManager.DeleteTask(taskId);
-                        break;
-                    }
-                    case "mark":
-                    {
-                        var newStatus = argv[2];
-                        if (!int.TryParse(argv[1], out var taskId))
-                            throw new InvalidDataException($"\"{argv[1]}\" is not a valid number. Please try again.\n");
-                        TaskManager.MarkTask(taskId, newStatus);
-                        break;
-                    }
-                    case "list":
-                    {
-                        if (argc > 1)
-                        {
-                            switch (argv[1])
-                            {
-                                case "todo":
-                                    TaskManager.Filter((task) => task.Status == "todo");
-                                    break;
-
-                                case "ongoing":
-                                    TaskManager.Filter((task) => task.Status == "ongoing");
-                                    break;
-
-                                case "completed":
-                                    TaskManager.Filter((task) => task.Status == "completed");
-                                    break;
-                            }
-                        }
-                        else
-                        {
-                            TaskManager.Filter((_) => true);
-                        }
-
-                        break;
-                    }
-                    case "quit":
-                    {
-                        FileManager.WriteToFile();
-                        Tasks.WriteCurrentId();
-                        Environment.Exit(0);
-                        break;
-                    }
-                    case "clear":
-                    {
-                        TaskManager.Clear();
-                        break;
-                    }
-                    case "reset":
-                    {
-                        TaskManager.Clear(true);
-                        break;
-                    }
-                    default:
-                    {
-                        Console.WriteLine($"Wrong arguments provided \"{argv[0]}\".\n");
-                        break;
-                    }
-
-                }
+                actions[action](argv, argc);
             }
             catch (ArgumentOutOfRangeException)
             {
                 Console.WriteLine($"Missing arguments, please try again. Passed \"{argv[0]}\".\n");
             }
-            catch (InvalidDataException)
+            catch (InvalidDataException e)
             {
-                Console.WriteLine($"\"{argv[1]}\" is not a valid number. Please try again.\n");
+                Console.WriteLine(e.Message);
             }
-            catch (FormatException)
+            catch (KeyNotFoundException)
             {
-                Console.WriteLine($"\"{argv[1]}\" is not a valid number. Please try again.\n");
+                Console.WriteLine($"Action \"{argv[0]}\" is not a valid action.\n");
             }
         }
     }
