@@ -17,7 +17,7 @@ public static class InputValidator
     var word = string.Empty;
         for (var i = 0; i < input.Length; i++)
         {
-            if (inputWords.Count == 3) break;
+            if (inputWords.Count >= 4) break;
             if (input[i] == '\'' || input[i] == '\"')
             {
                 word += input[i++];
@@ -25,6 +25,9 @@ public static class InputValidator
                 {
                     if (input[i] == '\'' || input[i] == '\"')
                     {
+                        inputWords.Add(word[1..]);
+                        word = string.Empty;
+                        i++;
                         break;
                     }
 
@@ -33,9 +36,6 @@ public static class InputValidator
                     inputWords.Add(word);
                     throw new FormatException($"Unclosed {word[0]} in {word}.\n");
                 }
-
-                if (i == input.Length - 1)
-                    inputWords.Add(word[1..]);
                 continue;
             }
 

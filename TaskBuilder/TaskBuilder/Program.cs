@@ -8,7 +8,7 @@ public static class Program
         Console.WriteLine("""
         Choose an action. Possible:
         add <description> <status*>,
-        update <id> <description>,
+        update <id> <description> <status*>,
         delete <id>,
         status <id> <status>,
         list <status*>,
