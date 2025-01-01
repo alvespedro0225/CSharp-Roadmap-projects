@@ -8,7 +8,7 @@ public static class Program
         Console.WriteLine("""
         Choose an action. Possible:
         add <description> <status*>,
-        update <id> <description>,
+        update <id> <description> <status*>,
         delete <id>,
         status <id> <status>,
         list <status*>,
@@ -77,7 +77,7 @@ public static class Program
             }
             catch (ArgumentOutOfRangeException)
             {
-                Console.WriteLine($"Missing arguments, please try again. Passed \"{argv[0]}\".\n");
+                Console.WriteLine($"Missing arguments. Passed \"{argv[0]}\".\n");
             }
             catch (InvalidDataException e)
             {
