@@ -37,30 +37,24 @@ public static class Program
                     break;
             }
         }
-        
-        while (true)
+        while (tries < maxTries && !win)
         {
-            if (tries >= maxTries)
-            {
-                Console.WriteLine($"You are out of tries. The number was {rngNumber}.");
-                break;
-            }
             Console.Write("Choose a number: ");
             var number = Console.ReadLine();
 
             if (!short.TryParse(number, out var inputNumber))
             {
-                Console.WriteLine($"{number} is not a number\n");
+                Console.WriteLine($"{number} is not a number.\n");
                 continue;
             }
             switch ( rngNumber - inputNumber )
             {
                 case > 0:
-                    Console.WriteLine($"{inputNumber} is too small\n");
+                    Console.WriteLine($"{inputNumber} is too small.\n");
                     tries++;
                     break;
                 case < 0:
-                    Console.WriteLine($"{inputNumber} is too big\n");
+                    Console.WriteLine($"{inputNumber} is too big.\n");
                     tries++;
                     break;
                 default:
@@ -68,11 +62,11 @@ public static class Program
                     win = true;
                     break;
             }
+        }
 
-            if (win)
-            {
-                break;
-            }
+        if (!win)
+        {
+            Console.WriteLine($"You are out of tries. The number was {rngNumber}.");
         }
     }
 }
