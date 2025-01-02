@@ -4,10 +4,11 @@ public static class Program
 {
     public static void Main(string[] args)
     {
-        var rnd = new Random();
-        var chosenNumber = (short) rnd.Next(1, 100);
+        var random = new Random();
+        var rngNumber = (short) random.Next(1, 100);
         short tries = 0;
         short maxTries = 0;
+        var win = false;
         Console.WriteLine("Choose a difficulty:\nEasy (10 tries),\nMedium (5 tries),\nHard (3 tries)\n");
         while (maxTries == 0)
         {
@@ -41,30 +42,35 @@ public static class Program
         {
             if (tries >= maxTries)
             {
-                Console.WriteLine($"You are out of tries. The number was {chosenNumber}.");
+                Console.WriteLine($"You are out of tries. The number was {rngNumber}.");
                 break;
             }
             Console.Write("Choose a number: ");
             var number = Console.ReadLine();
-            if (!short.TryParse(number, out var numberGuess))
+
+            if (!short.TryParse(number, out var inputNumber))
             {
                 Console.WriteLine($"{number} is not a number\n");
                 continue;
             }
+            switch ( rngNumber - inputNumber )
+            {
+                case > 0:
+                    Console.WriteLine($"{inputNumber} is too small\n");
+                    tries++;
+                    break;
+                case < 0:
+                    Console.WriteLine($"{inputNumber} is too big\n");
+                    tries++;
+                    break;
+                default:
+                    Console.WriteLine("You entered the right number, you win!\n");
+                    win = true;
+                    break;
+            }
 
-            if (numberGuess > chosenNumber)
+            if (win)
             {
-                Console.WriteLine($"{number} is too big\n");
-                tries++;
-            }
-            else if (numberGuess < chosenNumber)
-            {
-                Console.WriteLine($"{number} is too small\n");
-                tries++;
-            }
-            else
-            {
-                Console.WriteLine("You entered the right number, you win!\n");
                 break;
             }
         }
