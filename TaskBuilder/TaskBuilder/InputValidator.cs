@@ -18,40 +18,42 @@ public static class InputValidator
         for (var i = 0; i < input.Length; i++)
         {
             if (inputWords.Count >= 4) break;
-            if (input[i] == '\'' || input[i] == '\"')
+            switch (input[i])
             {
-                word += input[i++];
-                while (true)
-                {
-                    if (input[i] == '\'' || input[i] == '\"')
-                    {
-                        inputWords.Add(word[1..]);
-                        word = string.Empty;
-                        i++;
-                        break;
-                    }
-
+                case '\"' or '\'':
                     word += input[i++];
-                    if (i != input.Length) continue;
-                    inputWords.Add(word);
-                    throw new FormatException($"Unclosed {word[0]} in {word}.\n");
-                }
-                continue;
-            }
+                    while (true)
+                    {
+                        if (input[i] == '\'' || input[i] == '\"')
+                        {
+                            inputWords.Add(word[1..]);
+                            word = string.Empty;
+                            i++;
+                            break;
+                        }
 
-            if (input[i] != ' ')
-            {
-                word += input[i];
-            }
-            else if (input[i] == ' ' && !string.IsNullOrEmpty(word))
-            {
-                inputWords.Add(word);
-                word = string.Empty;
-            }
-
-            if (i == (input.Length - 1) && input[i] != ' ')
-            {
-                inputWords.Add(word);
+                        word += input[i++];
+                        if (i != input.Length) continue;
+                        inputWords.Add(word);
+                        throw new FormatException($"Unclosed {word[0]} in {word}.\n");
+                    }
+                    break;
+                
+                case not ' ':
+                    word += input[i];
+                    if (i == (input.Length - 1))
+                    {
+                        inputWords.Add(word);
+                    }
+                    break;
+                
+                case ' ':
+                    if (!string.IsNullOrEmpty(word))
+                    {
+                        inputWords.Add(word);
+                        word = string.Empty;
+                    }
+                    break;
             }
         }
         return inputWords;
