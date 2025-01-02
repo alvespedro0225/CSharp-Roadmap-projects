@@ -17,19 +17,23 @@ public static class Program
                 Console.Write("Please enter a valid difficulty:");
                 continue;
             }
-            var difficultyTable = new Dictionary<string, short>
+            switch (difficulty.ToLower())
             {
-                { "easy", 10 },
-                { "medium", 5 },
-                { "hard", 3 }
-            };
-            try
-            {
-                maxTries = difficultyTable[difficulty.ToLower()];
-            }
-            catch (KeyNotFoundException)
-            {
-                Console.Write("Please enter a valid difficulty:");
+                case "easy":
+                    maxTries = 10;
+                    break;
+                
+                case "medium":
+                    maxTries = 5;
+                    break;
+                
+                case "hard":
+                    maxTries = 3;
+                    break;
+                
+                default:
+                    Console.Write("Please enter a valid difficulty: ");
+                    break;
             }
         }
         
