@@ -1,0 +1,52 @@
+@model UnitModel;
+@{
+    Layout = "_Layout";
+    string[] units = ["Kelvin", "Fahrenheit", "Celsius"];
+    var weightUrl = @Url.Action("Temperature", "Units");
+}
+
+<!DOCTYPE html>
+
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"] - Temperature </title>
+</head>
+<body>
+@if (@Context.Request.Method.ToLower() == "get")
+{
+    <div class="form-check">
+        <form action="" method="post" class="form-control">
+            <label for="fromUnit" class="form-label">From Unit</label>
+            <select name="fromUnit" class="form-select" id="fromUnit">
+                @for (var i = 0; i < units.Length; i++)
+                {
+                    <option value="@i">@units[i]</option>
+                }
+            </select>
+            <label for="toUnit" class="form-label">To Unit</label>
+            <select name="toUnit" id="toUnit" class="form-select">
+                @for (var i = 0; i < units.Length; i++)
+                {
+                    <option value="@i">@units[i]</option>
+                }
+            </select>
+            <label for="oldValue" class="form-label">Value
+            </label>
+            <input type="number" id="oldValue" name="oldValue" class="form-control" min="0"/>
+            <button type="submit" class="btn btn-primary">Convert</button>
+        </form>
+    </div>
+}
+@if (@Context.Request.Method.ToLower() == "post")
+{
+    <div>
+        <p> @Model.Value.ToString("0.##") @Model.FromUnit equals @Model.Result.ToString("0.##") @Model.ToUnit </p>
+        <a href="@weightUrl">Go back</a>
+    </div>
+}
+</body>
+
+</html>

@@ -4,5 +4,10 @@
 
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h2 class="h2">Available Conversions</h2>
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item"><a class="list-group-item list-group-item-action" href="@Url.Action("Temperature", "Units")">Temperature</a></li>
+        <li class="list-group-item"><a class="list-group-item list-group-item-action" href="@Url.Action("Weight", "Units")">Weight</a></li>
+        <li class="list-group-item"><a class="list-group-item list-group-item-action" href="@Url.Action("Length", "Units")">Length</a></li>
+    </ul>
 </div>

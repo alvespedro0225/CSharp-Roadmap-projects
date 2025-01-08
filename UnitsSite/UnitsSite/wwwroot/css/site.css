@@ -29,3 +29,20 @@ body {
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
   text-align: start;
 }
+
+.form-select {
+  max-width: 100px;
+  margin: 10px 0;
+}
+
+.form-control {
+  max-width: 200px;
+  margin-bottom: 10px;
+  text-align: left;
+}
+
+.list-group-item {
+  max-width: 300px;
+  min-width: 200px;
+  margin: 5px auto;
+}
