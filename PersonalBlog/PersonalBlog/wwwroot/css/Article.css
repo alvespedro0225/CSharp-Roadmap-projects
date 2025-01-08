@@ -1,0 +1,14 @@
+h1 {
+    padding-bottom: 50px;
+    padding-top: 15px;
+    font-size: 30px;
+}
+
+.main-text {
+    max-width: 600px;
+    margin-bottom: 30px;
+}
+
+.link-delete {
+    margin-left: 10px;
+}
