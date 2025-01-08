@@ -1,0 +1,26 @@
+@model Article
+
+@{
+    ViewBag.Title = "Article";
+    Layout = "_Layout";
+}
+<head>
+    <title>@Model.Title</title>
+    <link rel="stylesheet" href="~/css/Article.css" asp-append-version="true"/>
+</head>
+
+<h1 class="h1">@Model.Title</h1>
+<div class="main-text">
+    <h3>
+        @Model.Content
+    </h3>
+</div>
+
+@if (User.HasClaim((x => x.Value == "Admin")))
+{
+    <div>
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="link-edit">Edit</a>
+        <a asp-action="Delete" asp-route-id="@Model.Id" class="link-delete">Delete</a>
+    
+    </div>
+}

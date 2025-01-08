@@ -1,0 +1,25 @@
+@model Article
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+}
+
+<head>
+    <title>Edit</title>
+    <link rel="stylesheet" href="~/css/Edit.css" asp-append-version="true"/>
+</head>
+
+<h3>Edit item</h3>
+<form method="post" asp-action="Edit" asp-route-id="@Model.Id">
+    <div class="form-group">
+        <label for="title">Title</label>
+        <input type="text" class="form-control" id="title" name="title" value="@Model.Title"/>
+    </div>
+    <div class="form-group">
+        <label for="content">Content</label>
+        <textarea class="form-control big-text" id="content" name="content">@Model.Content</textarea>
+        <input type="submit" class="btn btn-primary"/>
+    </div>
+</form>
+

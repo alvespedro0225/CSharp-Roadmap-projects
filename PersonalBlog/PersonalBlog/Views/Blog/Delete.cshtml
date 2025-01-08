@@ -1,0 +1,15 @@
+@model Article
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+}
+
+<h1>Delete Article</h1>
+
+<p>Are you sure you want to delete the article: @Model.Title?</p>
+
+<form method="post" asp-action="Delete" asp-route-id="@Model.Id">
+    <input type="submit" value="Yes, i would like to delete this article."/>
+    <input type="button" onclick="window.location='@Url.Action("Article", "Blog", new {id = Model.Id})'; return false;" value="No, cancel."/>
+</form>

@@ -1,3 +1,4 @@
+@using System.Globalization
 @model List<Article>
 
 @{
@@ -17,7 +18,7 @@
         <tr>
             <th scope="col">#</th>
             <th scope="col">Name</th>
-            <th scope="col">Author</th>
+            <th scope="col">Last Updated</th>
             <th scope="col">Published Date</th>
         </tr>
         </thead>
@@ -26,11 +27,14 @@
         {
             <tr>
                 <th scope="row">@article.Id</th>
-                <td>@article.Title</td>
-                <td>@article.Author.UserName</td>
-                <td>@article.PublishDate</td>
-                @* <td><a asp-action="Edit" asp-route-id="@article.Id">Edit</a></td>
-                <td><a asp-action="Delete" asp-route-id="@article.Id">Delete</a></td> *@
+                <td><a class="page-link" asp-action="Article" asp-route-id="@article.Id">@article.Title</a></td>
+                <td>@article.UpdatedDate.ToString(CultureInfo.GetCultureInfo("pt-BR"))</td>
+                <td>@article.PublishDate.ToString(CultureInfo.GetCultureInfo("pt-BR"))</td>
+                @if (User.HasClaim((x => x.Value == "Admin")))
+                {
+                <td><a asp-action="Edit" asp-route-id="@article.Id" class="link-primary">Edit</a></td>
+                <td><a asp-action="Delete" asp-route-id="@article.Id" class="link-primary">Delete</a></td>
+                }
             </tr>
         }
         </tbody>
@@ -38,5 +42,8 @@
 </div>
 
 <div class="link-div">
-    <a target="_blank" asp-action="Create" class="link">Make a new post</a>
+    @if (User.HasClaim((x => x.Value == "Admin")))
+    {
+    <a asp-action="Create" class="link">Make a new post</a>
+    }
 </div>
