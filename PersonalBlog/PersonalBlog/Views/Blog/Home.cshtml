@@ -42,5 +42,8 @@
 </div>
 
 <div class="link-div">
+    @if (User.HasClaim((x => x.Value == "Admin")))
+    {
     <a asp-action="Create" class="link">Make a new post</a>
+    }
 </div>
