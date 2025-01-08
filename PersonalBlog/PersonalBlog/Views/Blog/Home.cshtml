@@ -1,0 +1,42 @@
+@model List<Article>
+
+@{
+    ViewBag.Title = "Home";
+    Layout = "_Layout";
+    
+}
+
+<head>
+    <title>Home</title>
+    <link rel="stylesheet" href="~/css/Home.css" asp-append-version="true"/>
+</head>
+
+<div class="table-div">
+    <table class="table">
+        <thead class="table">
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Name</th>
+            <th scope="col">Author</th>
+            <th scope="col">Published Date</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var article in @Model)
+        {
+            <tr>
+                <th scope="row">@article.Id</th>
+                <td>@article.Title</td>
+                <td>@article.Author.UserName</td>
+                <td>@article.PublishDate</td>
+                @* <td><a asp-action="Edit" asp-route-id="@article.Id">Edit</a></td>
+                <td><a asp-action="Delete" asp-route-id="@article.Id">Delete</a></td> *@
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>
+
+<div class="link-div">
+    <a target="_blank" asp-action="Create" class="link">Make a new post</a>
+</div>

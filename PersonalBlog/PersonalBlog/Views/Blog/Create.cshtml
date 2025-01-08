@@ -1,0 +1,26 @@
+@model Article
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "_Layout";
+}
+<head>
+    <title>
+        Create
+    </title>
+    <link rel="stylesheet" href="~/css/Create.css" asp-append-version="true"/>
+</head>
+
+<h3>Create an item</h3>
+<form asp-action="Create" method="post">
+    <div class="form-group">
+        <label for="title">Title</label>
+        <input type="text" class="form-control" id="title" name="title"/>
+    </div>
+    <div class="form-group">
+        <label for="content">Content</label>
+        <textarea class="form-control big-text" id="content" name="content"></textarea>
+        <input type="submit" class="btn btn-primary"/>
+    </div>
+</form>
+
