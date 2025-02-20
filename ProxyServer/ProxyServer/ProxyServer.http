@@ -1,0 +1,6 @@
+@ProxyServer_HostAddress = http://localhost:1234
+
+GET {{ProxyServer_HostAddress}}/papa
+Accept: text/html
+
+###
