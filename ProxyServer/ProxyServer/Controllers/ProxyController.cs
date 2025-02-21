@@ -18,7 +18,7 @@ public class ProxyController(IProxyClient client, IRedisCache cache) : Controlle
         var cache = await _redisCache.GetDataAsync<string?>(uri);
         if (!string.IsNullOrEmpty(cache))
         {
-            Console.WriteLine("Cache hit");
+            Console.WriteLine("Cache: HIT");
             return new ContentResult
             {
                 Content = cache,
@@ -29,7 +29,7 @@ public class ProxyController(IProxyClient client, IRedisCache cache) : Controlle
         var res = await result;
         var cont = await res.Content.ReadAsStringAsync();
         Task redis = _redisCache.SetDataAsync(uri, cont);
-        Console.WriteLine("Cache miss");
+        Console.WriteLine("Cache: MISS");
         await redis;
         foreach (var header in res.Headers)
         {
@@ -72,10 +72,4 @@ public class ProxyController(IProxyClient client, IRedisCache cache) : Controlle
             ContentType = "text/html",
         };
     }
-    
-    // [HttpPost("/{uri}")]
-    // public IActionResult Post(string uri)
-    // {
-    //     
-    // }
 }

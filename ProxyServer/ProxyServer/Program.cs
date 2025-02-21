@@ -1,8 +1,5 @@
 using System.CommandLine;
-using System.Net.Http.Headers;
 using ProxyServer.Services;
-using ProxyServer.Services.Caching;
-using StackExchange.Redis;
 
 string? connectionString = Environment.GetEnvironmentVariable("REDIS_CONNECTION_STRING");
 if (string.IsNullOrEmpty(connectionString)) throw new ArgumentException("Redis connection string is missing.");
@@ -27,49 +24,27 @@ var startCommand = new Command("caching-proxy", "Sets the server up.")
     originOptions,
 };
 rootCommand.Add(startCommand);
+CommandManager.ConnectionString = connectionString;
 
-startCommand.SetHandler(async (port, origin) =>
+startCommand.SetHandler((port, origin) =>
     {
-        Console.WriteLine(port + origin);
-        await SetUp(port, origin);
+        var call = false;
+        // while (!call) blocks the thread from 
+        // ReSharper disable once AccessToModifiedClosure
+        // ReSharper disable once LoopVariableIsNeverChangedInsideLoop
+        _ = WebAppCreator.CreateApp(port, origin, connectionString, Task.Run(() => {while (!call);}));
+        bool end = false;
+        while (!end)
+        {
+            int response = CommandManager.Read();
+            switch (response)
+            {
+                case 1: end = true; break;
+                case 2: Console.WriteLine("Usage: caching-proxy [command]; --clear-cache, --quit"); break;
+                case 3: call = true; Console.WriteLine("Closing"); break;
+            }
+        }
     },
     portOptions, originOptions);
 
 return rootCommand.InvokeAsync(args).Result;
-
-Task SetUp(int? port, string? origin)
-{
-    Environment.SetEnvironmentVariable("ASPNETCORE_URLS", $"http://localhost:{port}");
-    var builder = WebApplication.CreateBuilder();
-    builder.Services.AddControllers();
-    builder.Services.AddHttpClient("Proxy", client =>
-    {
-        client.BaseAddress = new Uri($"https://{origin}");
-        client.DefaultRequestHeaders.UserAgent.Add( new ProductInfoHeaderValue("TestApi", "0.1"));
-    });
-    
-    builder.Services.AddStackExchangeRedisCache(options =>
-    {
-        options.Configuration = connectionString;
-    });
-    builder.Services.AddSingleton<IRedisCache, RedisCache>();
-    builder.Services.AddSingleton<IProxyClient, ProxyClient>();
-    var app = builder.Build();
-    app.MapControllers();
-    Task.Run(() => app.Run());
-
-    while (true)
-    {
-        var input = Console.ReadLine();
-        if (string.IsNullOrEmpty(input)) continue;
-        input = input.ToLower();
-        if (input.StartsWith("quit")) break;
-        if (!input.StartsWith("caching-proxy")) continue;
-        if (!input.Contains("--clear-cache")) continue;
-        ConnectionMultiplexer redis = ConnectionMultiplexer.Connect($"{connectionString},allowAdmin=true");
-        var server = redis.GetServer(connectionString);
-        server.FlushDatabase();
-            
-    }
-    return Task.CompletedTask;
-}
