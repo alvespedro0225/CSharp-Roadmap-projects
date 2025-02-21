@@ -5,7 +5,7 @@ namespace ProxyServer.Services;
 
 public static class WebAppCreator
 {
-    public static async Task CreateApp(int? port, string? origin, string connectionString, Task callback)
+    public static WebApplication CreateApp(int? port, string? origin, string connectionString)
     {
         var builder = WebApplication.CreateBuilder();
         builder.Services.AddControllers();
@@ -23,10 +23,6 @@ public static class WebAppCreator
         builder.Services.AddSingleton<IProxyClient, ProxyClient>();
         var app = builder.Build();
         app.MapControllers();
-        // runs the webapi on another thread so it doesn't block its disposing execution
-        _ = app.RunAsync($"http://localhost:{port}");
-        // blocks the disposing thread until it's called
-        await callback;
-        await app.DisposeAsync();
+        return app;
     }
 }

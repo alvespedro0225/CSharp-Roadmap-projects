@@ -26,13 +26,10 @@ var startCommand = new Command("caching-proxy", "Sets the server up.")
 rootCommand.Add(startCommand);
 CommandManager.ConnectionString = connectionString;
 
-startCommand.SetHandler((port, origin) =>
+startCommand.SetHandler(async (port, origin) =>
     {
-        var call = false;
-        // while (!call) blocks the thread from 
-        // ReSharper disable once AccessToModifiedClosure
-        // ReSharper disable once LoopVariableIsNeverChangedInsideLoop
-        _ = WebAppCreator.CreateApp(port, origin, connectionString, Task.Run(() => {while (!call);}));
+        var app = WebAppCreator.CreateApp(port, origin, connectionString);
+        _ = app.RunAsync();
         bool end = false;
         while (!end)
         {
@@ -41,7 +38,7 @@ startCommand.SetHandler((port, origin) =>
             {
                 case 1: end = true; break;
                 case 2: Console.WriteLine("Usage: caching-proxy [command]; --clear-cache, --quit"); break;
-                case 3: call = true; Console.WriteLine("Closing"); break;
+                case 3: await app.DisposeAsync(); Console.WriteLine("Closing"); break;
             }
         }
     },
